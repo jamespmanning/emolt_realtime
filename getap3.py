@@ -247,7 +247,10 @@ print noext[:-4]
 os.system('cat /net/pubweb_html/drifter/emolt_ap3.dat >> /net/pubweb_html/drifter/emolt.dat')
 # Here's where we want to concantenate RockBlock transmissions to AP3 on 8/19/2020
 urllib.urlretrieve ("https://studentdrifters.org/posthuanxin/rock_emolt2.dat", "rock_emolt2.dat") # commented out on 9/4/2020 when bad data came through
+#urllib.urlretrieve ("https://studentdrifters.org/posthuanxin/emolt_nicks.dat","emolt_nicks.dat")
+#urllib.urlretrieve ("https://emolt.org/emolt_nicks.dat","emolt_nicks.dat")# this option wasn't working ... I was getting a "socket error: SSL: CERTIFICATE_VERIFY_FAILED"
 os.system('cat rock_emolt2.dat >> /net/pubweb_html/drifter/emolt.dat')
+#os.system('cat emolt_nicks.dat >> /net/pubweb_html/drifter/emolt.dat')
 pipe2 = subprocess.Popen(['/home/jmanning/anaconda2/bin/python','/home/jmanning/py/getlastfix.py'])
 pipe3 = subprocess.Popen(['/home/jmanning/anaconda2/bin/python','/home/jmanning/py/qaqc_emolt.py'])
 # the following line creates the "emolt.xml" that is read by drifter/fishtemps.html googlemap
