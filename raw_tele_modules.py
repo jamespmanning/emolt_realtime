@@ -17,6 +17,9 @@ Mar 11,2020 Mingchao
     selecte the Boat belongs to Fixed or Mobile
 Apr 8,2020 Mingchao
     Using 'type' replace 'cat' for adding the two file in one file on Windows
+Dec 1,2020 JiM
+    Fixed the finding of raw data by changing the line 875 "if telemetrystatus_df['Boat'][n] == fpath.split('\\')[7]:"   
+    Fixed the read to "emolt_ap3_reports" to be on the newfish_www drive in "weekly_times" function
 """
 import conversions as cv
 import ftplib
@@ -88,8 +91,8 @@ def listclean(lista):
 def weekly_times(name,tstart,tend):
     '''input name and start time and end time, the formay of start and end time is str yyyy-mm-dd
     acording to this information count how often the fisherman fishing'''
-    path='https://nefsc.noaa.gov/drifter/emolt_ap3_reports.dat'
-    #path='https://apps-nefsc.fisheries.noaa.gov/drifter/emolt_ap3_reports.dat'
+    #path='https://nefsc.noaa.gov/drifter/emolt_ap3_reports.dat'
+    path='https://apps-nefsc.fisheries.noaa.gov/drifter/emolt_ap3_reports.dat'
     #print('reading reports ... standby')
     df=pd.read_csv(path,sep=',',names=['name','time','lat','lon'])
     #print('finished reading emolt_ap3_reports file')
@@ -869,7 +872,8 @@ def match_tele_raw(input_dir,path_save,telemetry_status,start_time,end_time,emol
             #value_data_df=data_df.loc[(data_df['Depth(m)']>0.85*mean(data_df['Depth(m)']))]  #filter the data
              for n in range(len(telemetrystatus_df)):#selecte the Boat belongs to Fixed or Mobile
                 #if telemetrystatus_df['Boat'][n] == fpath.split('\\')[8]:
-                if telemetrystatus_df['Boat'][n] == fpath.split('\\')[5]:
+                #if telemetrystatus_df['Boat'][n] == fpath.split('\\')[5]: 
+                if telemetrystatus_df['Boat'][n] == fpath.split('\\')[7]: # made this change 12/1/2020 when I noticed it wasn't fiinding any raw files
                     if telemetrystatus_df['Fixed vs. Mobile'][n] == 'Mobile':
                         value_data_df=data_df.loc[(data_df['Depth(m)']>0.85*max(data_df['Depth(m)']))]  #filter the data
                     else:
@@ -886,11 +890,12 @@ def match_tele_raw(input_dir,path_save,telemetry_status,start_time,end_time,emol
              max_lon=max(value_data_df['Lon'].values)
              mean_lat=str(round(mean(value_data_df['Lat'].values),4))
              mean_lon=str(round(mean(value_data_df['Lon'].values),4)) 
-            #mean_temp=str(round(mean(value_data_df['Temperature(C)'][1:len(value_data_df)]),2))
-            #mean_temp=str(int(round(np.mean(value_data_df['Temperature(C)'][1:len(value_data_df)]),2)*100))
+             #mean_temp=str(round(mean(value_data_df['Temperature(C)'][1:len(value_data_df)]),2))
+             #mean_temp=str(int(round(np.mean(value_data_df['Temperature(C)'][1:len(value_data_df)]),2)*100))
              mean_temp=str(int(round(np.mean(value_data_df['Temperature(C)'][0:-1]),2)*100))
-            #std_temp=str(round(std(value_data_df['Temperature(C)'][1:len(value_data_df)]),2))  # standard deviation of bottom temps
-            #std_temp=str(int(round(np.std(value_data_df['Temperature(C)'][1:len(value_data_df)]),2)*100))
+             mean_temp=str(int(round(np.mean(value_data_df['Temperature(C)'][0:-1]),2)))# rid of the "*100" on 1 Dec 2020
+             #std_temp=str(round(std(value_data_df['Temperature(C)'][1:len(value_data_df)]),2))  # standard deviation of bottom temps
+             #std_temp=str(int(round(np.std(value_data_df['Temperature(C)'][1:len(value_data_df)]),2)*100))
              std_temp=str(int(round(np.std(value_data_df['Temperature(C)'][0:-1]),2)*100))
              mean_depth=str(abs(int(round(mean(value_data_df['Depth(m)'].values))))).zfill(3)   #caculate the mean depth
              range_depth=str(abs(int(round(max(value_data_df['Depth(m)'].values)-min(value_data_df['Depth(m)'].values))))).zfill(3) #caculate the mean depth
@@ -898,7 +903,7 @@ def match_tele_raw(input_dir,path_save,telemetry_status,start_time,end_time,emol
                 if header_df['key'][i].lower()=='vessel number'.lower():
                     vessel_number=int(header_df['value'][i])
                     break
-            #record number of raw files in every vessel,and min,max of lat and lon
+             #record number of raw files in every vessel,and min,max of lat and lon
              for i in record_file_df.index:
                 if record_file_df['Vessel#'][i]==vessel_number:
                                 if record_file_df['file_number'].isnull()[i]:
@@ -918,7 +923,7 @@ def match_tele_raw(input_dir,path_save,telemetry_status,start_time,end_time,emol
                                     if record_file_df['max_lon'][i]<max_lon:
                                         record_file_df['max_lon'][i]=max_lon
                                 break
-            #write the data of raw file to dict
+             #write the data of raw file to dict
              for i in telemetrystatus_df.index:
                 if telemetrystatus_df['Vessel#'][i]==vessel_number:                                                                  #time_local to time_gmt
                         raw_dict[telemetrystatus_df['Boat'][i]]=raw_dict[telemetrystatus_df['Boat'][i]].append(pd.DataFrame(data=[[time_gmt,\

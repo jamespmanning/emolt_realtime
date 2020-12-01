@@ -175,18 +175,12 @@ def get_emolt_no_telemetry(path, emolt_raw_path, emolt_QCed_df_save):
     return emolt_no_telemetry
 def main():
     ############################################## Hardcodes ###############################
-    Host = '66.114.154.52'
-    UserName = 'huanxin'
-    Pswd = '123321'
-    remot_dir = '/mingchao_weekly'
-    local_folder = 'E:\\Mingchao\\result\\mingchao_weekly\\'
     min_miles_from_dock=2 # minimum miles from a dock position to be considered ok (this is not actual miles but minutes of degrees)
     temp_ok=[0,30]    # acceptable range of mean temps
     depth_ok=[10,500] # acceptable range of mean depths (meters)
     fraction_depth_error=0.15 # acceptable difference of observed bottom vs NGDC
     mindist_allowed=0.4 # minimum distance from nearest NGDC depth in km 
     realpath=os.path.dirname(os.path.abspath(__file__))
-    #realpath='E:/programe/raw_data_match/py'
     #parameterpath=realpath.replace('py','parameter')
     output_path=realpath.replace('py','result')  #use to save the data 
     picture_save=output_path+'\\stats\\' #use to save the picture
@@ -194,7 +188,6 @@ def main():
     # emolt = 'https://apps-nefsc.fisheries.noaa.gov/drifter/emolt.dat'
     emolt = 'https://nefsc.noaa.gov/drifter/emolt_ap3.dat'
     #telemetry_status=os.path.join(parameterpath,'telemetry_status.csv')
-    #telemetry_status='/home/jmanning/Mingchao/parameter/telemetry_status.csv'
     telemetry_status='C:\\Weekly_Project\\Weekly_Project\\programe\\aqmain\\parameter\\telemetry_status.csv'
     emolt_raw_save='C:\\Weekly_Project\\Weekly_Project\\Mingchao\\result'#output emolt_raw.csv
     emolt_raw_path='C:\\Weekly_Project\\Weekly_Project\\Mingchao\\result\\emolt_raw.csv'#input emolt_raw.csv 
@@ -205,10 +198,7 @@ def main():
     emolt_QCed_path = 'https://apps-nefsc.fisheries.noaa.gov/drifter/emolt_QCed.csv'
     emolt_QCed_df_save = 'C:\\Weekly_Project\\Weekly_Project\\Mingchao\\result\\mingchao_weekly'
     # below hardcodes is the informations to upload local data to student drifter. 
-#    subdir=['stats']    
-#    mremote='/Raw_Data'
-#    remote_subdir=['stats']
-    end_time=datetime.now()-timedelta(days=1)#input local time,in match_tele_raw will change to UTCtime
+    end_time=datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)#-timedelta(days=1)#input local time,in match_tele_raw will change to UTCtime
     start_time=end_time-timedelta(weeks=1)
     ############################################## Main #####################################
     if not os.path.exists(picture_save):
@@ -223,15 +213,8 @@ def main():
     emolt_no_telemetry_df.to_csv(os.path.join(emolt_QCed_df_save,'emolt_no_telemetry.csv'))
     df_good=dfgood(emolt_QCed_path, depth_ok, min_miles_from_dock, temp_ok, fraction_depth_error, mindist_allowed, emolt_no_telemetry=emolt_no_telemetry_df)
     print('finished dfgood')
-#    df_good.to_csv(os.path.join(emolt_QCed_df_save,'emolt_QCed_no_telemetry.csv'))
     df_good.to_csv(os.path.join(emolt_QCed_df_save,'emolt_QCed_telemetry_and_wified.csv'))
-    #tele_dict=dict['tele_dict']
-    #raw_dict=dict['raw_dict']
-    #record_file_df=dict['record_file_df']
-    #index=tele_dict.keys()
     print('match telemetered and raw data finished!')
-    #print("start draw map")
-    #upload_weely(Host, UserName, Pswd,remot_dir, local_folder)
     
 '''
     raw_d=pd.DataFrame(data=None,columns=['time','filename','mean_temp','mean_depth','mean_lat','mean_lon'])
