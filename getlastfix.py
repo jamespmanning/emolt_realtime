@@ -126,9 +126,13 @@ def gps_compare_JiM(lat,lon,mindistfromharbor): #check to see if the boat is in 
        near_harbor='no'
     return near_harbor #yes or no
 
+
 def get_depth(loni,lati,mindist_allowed):
     # routine to get depth (meters) using vol1 from NGDC
-    url='https://www.ngdc.noaa.gov/thredds/dodsC/crm/crm_vol1.nc'
+    if lati>=40.:
+        url='https://www.ngdc.noaa.gov/thredds/dodsC/crm/crm_vol1.nc'
+    else:
+        url='https://www.ngdc.noaa.gov/thredds/dodsC/crm/crm_vol2.nc'
     nc = netCDF4.Dataset(url).variables 
     lon=nc['x'][:]
     lat=nc['y'][:]
@@ -138,7 +142,6 @@ def get_depth(loni,lati,mindist_allowed):
     else:
       depth=nc['z'][yi,xi]
     return depth#,min_dist
-
 def nearlonlat_zl(lon,lat,lonp,latp): # needed for the next function get_FVCOM_bottom_temp 
     """ 
     used in "get_depth"
