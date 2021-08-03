@@ -20,7 +20,7 @@ conda_file_dir = conda.__file__
 conda_dir = conda_file_dir.split('lib')[0]
 proj_lib = os.path.join(os.path.join(conda_dir, 'share'), 'proj')
 os.environ["PROJ_LIB"] = proj_lib
-from mpl_toolkits.basemap import Basemap
+#from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -31,25 +31,39 @@ def get_gomofs_url(date):
     """
     the format of date is a datetime such as datetime.datetime(2019, 2, 27, 11, 56, 51, 666857)
     returns the url of data
+    
+    JiM modified Jan 2021 to get old files from NCEI and recent from CO-OPS servers
+    JiM modified Feb 2021 to get forecast files
     """
 #    print('start calculate the url!') 
 #    date=date+datetime.timedelta(hours=4.5)
     date_str=date.strftime('%Y%m%d%H%M%S')
     hours=int(date_str[8:10])+int(date_str[10:12])/60.+int(date_str[12:14])/3600.
     tn=int(math.floor((hours)/6.0)*6)  ## for example: t12z the number is 12
-    if len(str(tn))==1:
-        tstr='t0'+str(tn)+'z'   # tstr in url represent hour string :t00z
-    else:
-        tstr='t'+str(tn)+'z'
+    tstr='t'+str(tn).zfill(2)+'z'
     if round((hours)/3.0-1.5,0)==tn/3:
         nstr='n006'       # nstr in url represent nowcast string: n003 or n006
     else:
         nstr='n003'
     # Jim changed 7/6/2020
-    url='https://www.ncei.noaa.gov/thredds/dodsC/model-gomofs-files/'+str(date.year)+'/'+str(date.month).zfill(2)+'/nos.gomofs.fields.'+nstr+'.'+date_str[:8]+'.'+tstr+'.nc'
-    
-    #url='http://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/'\
-    #+date_str[:6]+'/nos.gomofs.fields.'+nstr+'.'+date_str[:8]+'.'+tstr+'.nc'
+    #print(date)
+    #print(datetime.date.today())
+    if date.date()<=datetime.datetime.now().date()-datetime.timedelta(days=7):
+        #if date<=datetime.datetime(2020,12,1,0,0,0): #old gomofs files are on NCEI
+        url='https://www.ncei.noaa.gov/thredds/dodsC/model-gomofs-files/'\
+            +str(date.year)+'/'+str(date.month).zfill(2)+'/nos.gomofs.fields.'+nstr+'.'+date_str[:8]+'.'+tstr+'.nc'
+    else: # recent files are stored on the co-ops server
+        if date<datetime.datetime.now(): # get "nowcast"
+            url='https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/'\
+            +date_str[:4]+'/'+date_str[4:6]+'/'+date_str[6:8]+'/nos.gomofs.fields.'+nstr+'.'+date_str[:8]+'.'+tstr+'.nc'
+        else: # JIM added the following "forecast" in Feb 2021
+            #now=datetime.datetime.now()
+            #midnight=datetime.datetime(now.year,now.month,now.day,0,0,0)
+            #hours=int(round((now-midnight).total_seconds()/60/60))
+            fn=int(math.floor((hours)/3.0)*3) 
+            url='https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/'\
+            +date_str[:4]+'/'+date_str[4:6]+'/'+date_str[6:8]+'/nos.gomofs.fields.f'+str(fn).zfill(3)+'.'+date_str[:8]+'.t00z.nc'
+        
     return url
 
 def get_gomofs_url_forecast(date,forecastdate=True):
