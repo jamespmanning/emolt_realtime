@@ -18,15 +18,12 @@ from matplotlib import pyplot as plt
 ## HARDCODES ###
 scale_dep=1.0 # scale factor where originally it looked like I needed to devide by scale_dep=10.0
 min_depth=15.0/scale_dep # minimum depth (meters) acceptable for a cast
-mac='00-1e-c0-6c-74-f1/' # ME
+mac='00-1e-c0-6c-74-f1/' # Mary Elizabeth
 vessel='Mary Elizabeth'
-#mac='00-1e-c0-6c-75-1d/' # BoB had no GPS files initially
+#mac='00-1e-c0-6c-75-1d/' # Beast of Burden
 # eMOLT credentials
-access_key = 'AKIA2SU3QQX6TVGOOMT4'
-access_pwd = 'VAVkTQIQAaDtUBw+sKAOtG3VpacLlD27f7PA2qTH'
-#ODN credentials
-#access_key = 'AKIA2SU3QQX66YARKPR2'  # eMOLT Lowell credentials
-#access_pwd = 'j2APgahiQkfZlGaEtFcDuqGA2V1UbWrYmKmsQyw1'  # eMOLT Lowell credentials
+access_key = ''
+access_pwd = ''
 
 s3_bucket_name = 'bkt-cfa'  # bucket name
 path = 'aws_files/'  # path to store the data
