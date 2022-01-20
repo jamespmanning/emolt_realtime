@@ -10,10 +10,10 @@ database_connection_details = {
         'db_host': '',
         'db_port': 3306,
         'db_user': 'rw_user',
-        'db_password': '3gJL*cgJu.{>"hmJ',
+        'db_password': '',
         'database': 'bdc_dev'
     }
 }
 
 #'db_user': 'rw_user',
-#'db_password': '3gJL*cgJu.{>"hmJ',
+#'db_password': '',
