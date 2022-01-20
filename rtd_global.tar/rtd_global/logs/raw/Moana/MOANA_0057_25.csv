@@ -1,0 +1,19 @@
+Download Time,10/01/2022 16:19:54
+Moana Serial Number,57
+Moana Firmware,MOANA-1.21
+Protocol Version,2
+Moana calibration date,29/05/2021
+Reset Codes, 0x200104
+Moana Battery (V),3.60
+Max Lifetime Depth (dBar),233.0
+Baseline(mBar),968
+Date,Time,Depth Decibar,Temperature C
+2022-01-10,15:47:08,1.1,4.076
+2022-01-10,15:47:11,2.2,3.640
+2022-01-10,15:52:11,3.0,4.951
+2022-01-10,15:57:11,3.0,4.862
+2022-01-10,16:02:11,3.1,4.786
+2022-01-10,16:07:11,3.0,4.712
+2022-01-10,16:12:11,2.9,4.654
+2022-01-10,16:17:11,2.9,4.603
+2022-01-10,16:19:38,1.8,3.590

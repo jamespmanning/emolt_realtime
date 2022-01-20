@@ -1,0 +1,11 @@
+Probe Type,Moana
+Serial Number,0057
+Vessel Number,5
+Vessel Name,Default_setup
+Date Format,YYYY-MM-DD
+Time Format,HH24:MI:SS
+Temperature,C
+Depth,m
+HEADING,datet(GMT),lat,lon,Temperature (C),Depth (m)
+DATA,2022-01-18 15:19:13,41.537076,-70.642498,2.6,1.1
+DATA,2022-01-18 15:19:33,41.537076,-70.642498,2.7,1.4
