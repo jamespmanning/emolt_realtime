@@ -82,7 +82,7 @@ for j in range(len(ldf_gps)):
         df['depth (m)']=ldf_pressure[j]['Pressure (dbar)'].values/scale_dep
         df['lat']=lat
         df['lon']=lon
-        df.to_csv('aws_files/'+filenames[j][18:-4]+'.csv')
+        df.to_csv('aws_files/'+filenames[j][18:-4]+'.csv') # here is where we generate the merged file
         fig=plt.figure(figsize=(8,5))
         ax = fig.add_subplot(211)
         ax.plot(df.index,df['Temperature (C)'],color='r')
