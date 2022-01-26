@@ -6,7 +6,7 @@
 # step 2: call Plotting.plot_profile in the same way that Carles "merge" program does
 
 ############  HARDCODES #####
-file='rawfiles/MOANA_0057_38.csv' # where #39 is the last haul of the day at 4:21 PM local (20:21 GMT)
+file='rawfiles/MOANA_0057_39.csv' # where #39 is the last haul of the day at 4:21 PM local (20:21 GMT)
 
 import numpy as np
 import matplotlib.pyplot as plt
