@@ -5,7 +5,7 @@ Created on Mon Jan 23 18:01:51 2023
 
 @author: user
 """
-from pandas import read_csv,DataFrame
+import pandas as pd
 import ftplib
 from pyproj import Proj
 p = Proj(init='nad83:1802')
@@ -33,7 +33,7 @@ def eMOLT_cloud(ldata):# send file to SD machine
             print(filename.split('/')[-1], 'uploaded in SD endpoint')
             
 # Now read in the eMOLT realtime data and output x,y,temp
-df=read_csv('https://emolt.org/emoltdata/emolt_QCed.csv')
+df=pd.read_csv('https://emolt.org/emoltdata/emolt_QCed.csv')
 df=df[df['flag']==0].reset_index()
 #df=df[0:10]
 x,y=[],[]
@@ -41,6 +41,8 @@ for k in range(len(df)):
     xx,yy=p(df.lon[k],df.lat[k])
     x.append(xx);y.append(yy)
 df['x']=x;df['y']=y
-dfo=DataFrame([df['datet'],df['x'],df['y'],df['lon'],df['lat'],df['depth'],df['mean_temp']]).T
+dfo=pd.DataFrame([df['datet'],df['x'],df['y'],df['lon'],df['lat'],df['depth'],df['mean_temp']]).T
+dfo['datet']= pd.to_datetime(dfo['datet'])
+dfo.sort_values('datet', inplace=True)
 dfo.to_csv('/home/user/emolt/emolt_with_xy.csv')
 eMOLT_cloud(['/home/user/emolt/emolt_with_xy.csv'])
