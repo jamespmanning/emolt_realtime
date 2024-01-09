@@ -13,7 +13,7 @@ In Jan 2024, additions were made to this emolt_realtime repository after the "em
 These are primarily JiM's post-processing routines like:
 
 get_emolt_erddap.py  - generates a color coded map of surf or bot temps<br>
-get_emolt_rt_bottom_temp - generates a time series of realtime bottom temps given site code to compare with non-realtime cases
-fvcom2xy_new.py - not yet operational version that includes the emolt_rt_qaqc data
-plot_temp_profiles - generates a animation of profiles with a station map
+get_emolt_rt_bottom_temp - generates a time series of realtime bottom temps given site code to compare with non-realtime cases<br>
+fvcom2xy_new.py - not yet operational version that includes the emolt_rt_qaqc data<br>
+plot_temp_profiles - generates a animation of profiles with a station map<br>
 
