@@ -14,7 +14,7 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot as plt
-from conversions import f2c,c2f,m2fth,fth2m
+from conversions import f2c,c2f,m2fth,fth2m,distance
 
 #HARDCODES
 site ='OD08'
@@ -45,6 +45,7 @@ if st=='Profiling%20Up': # not typical case of surface temp
     marker='*'
 else:
     #df['new'] = df.groupby('tow_id')['depth (m)'].transform('max')
+    #df=df[df['depth (m)'] == df['new']]
     marker='-'
     
 df['datet']=pd.to_datetime(df['time (UTC)'])
@@ -90,3 +91,33 @@ plt.text(max(df.index),np.nanmax(df['temperature (degree_C)'].values),\
 fig.autofmt_xdate()
 plt.show()
 plt.savefig('Moana_vs_Minilog_'+site+'_'+st+'.png')
+#dfpos = df.groupby(['latitude (degrees_north)', 'longitude (degrees_east)']).size()
+#dfpos = df.groupby(['latitude (degrees_north)', 'longitude (degrees_east)','depth (m)']).size().reset_index(name='Freq')
+dfpos = df.groupby(['latitude (degrees_north)', 'longitude (degrees_east)']).size().reset_index(name='Freq')
+d=[]
+for k in range(len(dfpos)):
+    d.append(distance((lat,lon),(dfpos['latitude (degrees_north)'][k], dfpos['longitude (degrees_east)'][k]))[0])
+print('mean distance = '+str(np.mean(d))+' std = '+str(np.std(d)))
+
+# make a figure comparing realtime position with eMOLT non-realtime nominal
+fig=plt.figure()
+plt.plot(dfpos['longitude (degrees_east)'],dfpos['latitude (degrees_north)'],'o',markersize=30)#,label='realtime site')
+for k in range(len(dfpos)):
+    plt.plot(dfpos['longitude (degrees_east)'].values[k],dfpos['latitude (degrees_north)'].values[k],'o',color='k',markersize=20)
+    meandepdf=df[(df['longitude (degrees_east)']==dfpos['longitude (degrees_east)'].values[k])&\
+                 (df['latitude (degrees_north)']==dfpos['latitude (degrees_north)'].values[k])]
+    #plt.text(dfpos['longitude (degrees_east)'].values[k],dfpos['latitude (degrees_north)'].values[k],\
+    #         '%0.2f' % meandepdf['depth (m)'].values[0],color='w',va='center',ha='center',zorder=10)
+plt.text(np.mean(dfpos['longitude (degrees_east)'].values),np.mean(dfpos['latitude (degrees_north)'].values),\
+             '%0.2f' % np.nanmean(df['depth (m)'].values),color='w',va='center',ha='center',zorder=10)
+plt.text(lon,lat,'%0.2f' % dep,va='center',ha='center')
+plt.plot(lon,lat,'o',color='r',markersize=30,label='nominal site')
+from matplotlib import ticker as mtick
+fmt = '%0.4f'  # as per no of zero(or other) you want after decimal point
+xticks = mtick.FormatStrFormatter(fmt)
+plt.gca().xaxis.set_major_formatter(xticks)
+yticks = mtick.FormatStrFormatter(fmt)
+plt.gca().yaxis.set_major_formatter(yticks)
+plt.title('mean distance from nominal site = '+"%0.2f" % np.mean(d)+' kilometers') 
+#plt.legend()
+plt.savefig('Moana_vs_Minilog_'+site+'_'+st+'_position.png') 
