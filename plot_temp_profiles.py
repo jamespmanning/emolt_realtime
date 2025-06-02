@@ -27,6 +27,7 @@ from conversions import c2f,m2fth
 #HARDCODES
 area='NE'
 st='Profiling%20Up' #segment_type
+st='2' # made this change June 2025
 startt=(dt.datetime.now()-dt.timedelta(days=30)).strftime('%Y-%m-%dT%H:%M:%SZ')#'2023-12-01T13:53:21Z'
 surf_or_bot='bottom'
 try:
@@ -154,7 +155,9 @@ def make_gif(gif_name,png_dir,frame_length = 0.2,end_pause = 4,ss=10):
 #MAIN CODE
 gbox=getgbox(area) # returns a list of corners [minlon,maxlon,minlat,maxlat]
 gb= list(map(str, gbox))# returns a list of strings
-url='http://54.208.149.221:8080/erddap/tabledap/eMOLT_RT_QAQC.csvp?tow_id%2Csegment_type%2Ctime%2Clatitude%2Clongitude%2Cdepth%2Ctemperature&segment_type=%22'+st+'%22&time%3E='+startt+'&latitude%3E='+gb[2]+'&latitude%3C='+gb[3]+'&longitude%3E='+gb[0]+'&longitude%3C='+gb[1]+''
+url='http://erddap.emolt.net/erddap/tabledap/eMOLT_RT_QAQC.csvp?tow_id%2Csegment_type%2Ctime%2Clatitude%2Clongitude%2Cdepth%2Ctemperature&segment_type='+st+'&time%3E='+startt+'&latitude%3E='+gb[2]+'&latitude%3C='+gb[3]+'&longitude%3E='+gb[0]+'&longitude%3C='+gb[1]+''
+#url='http://erddap.emolt.net/erddap/tabledap/eMOLT_RT_QAQC.csvp?tow_id%2Csegment_type%2Ctime%2Clatitude%2Clongitude%2Cdepth%2Ctemperature&segment_type=%22'+st+'%22&time%3E='+startt+'&latitude%3E='+gb[2]+'&latitude%3C='+gb[3]+'&longitude%3E='+gb[0]+'&longitude%3C='+gb[1]+''
+#url='http://54.208.149.221:8080/erddap/tabledap/eMOLT_RT_QAQC.csvp?tow_id%2Csegment_type%2Ctime%2Clatitude%2Clongitude%2Cdepth%2Ctemperature&segment_type=%22'+st+'%22&time%3E='+startt+'&latitude%3E='+gb[2]+'&latitude%3C='+gb[3]+'&longitude%3E='+gb[0]+'&longitude%3C='+gb[1]+''
 #url='http://54.208.149.221:8080/erddap/tabledap/eMOLT_RT_QAQC.csvp?segment_type%2Ctime%2Clatitude%2Clongitude%2Cdepth%2Ctemperature&segment_type=%22'+st+'%22&time%3E=2023-12-01T13%3A53%3A21Z&latitude%3E=41.5&latitude%3C=42.3&longitude%3E=-70.75&longitude%3C=-70.'
 df=pd.read_csv(url)
 df.rename(columns={'latitude (degrees_north)':'lat','longitude (degrees_east)':'lon','depth (m)':'depth','temperature (degree_C)':'temp'},inplace=True)
@@ -181,7 +184,7 @@ for i in dtow:#[0:1]:
     ax1.plot(x,y,'r.',markersize=12)
     df1=df[df['tow_id']==i]
     x1,y1=m(df1.lon.values,df1.lat.values)
-    print(y1[0])
+    #print(y1[0])
     ax1.plot(x1[0],y1[0],'k.',markersize=30)
     plt.title(str(numtows)+' tows/profiles in the last 30 days of realtime eMOLT',fontsize=10)
     if depths_down=='no':
